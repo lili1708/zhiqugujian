@@ -1,0 +1,60 @@
+.admin-layout {
+  min-height: 100vh;
+}
+
+.admin-sider {
+  background: linear-gradient(180deg, #1d3557 0%, #2d4a6f 100%);
+}
+
+.admin-sider .ant-menu {
+  background: transparent;
+}
+
+.admin-sider .ant-menu-item {
+  margin: 4px 8px;
+  border-radius: 8px;
+}
+
+.admin-sider .ant-menu-item-selected {
+  background: rgba(230, 57, 70, 0.2) !important;
+}
+
+.admin-logo {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.admin-header {
+  background: #fff;
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.admin-header .trigger {
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0 12px;
+}
+
+.admin-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-content {
+  margin: 24px;
+  padding: 24px;
+  background: #fff;
+  border-radius: 8px;
+  min-height: calc(100vh - 112px);
+}
