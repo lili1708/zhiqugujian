@@ -7,6 +7,8 @@
     "dev": "vite",
     "start-dev": "node scripts/start-dev-robust.js",
     "build": "tsc -b && vite build",
+    "build:vercel": "npm run build && npm run build:admin",
+    "build:admin": "cd admin-app && npm install && npm run build && cp -r dist/* ../dist/admin/ && cd ..",
     "lint": "eslint .",
     "preview": "vite preview"
   },
