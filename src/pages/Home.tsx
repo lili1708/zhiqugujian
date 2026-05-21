@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useBuildings, useFeaturedBuildings } from '@/hooks/useBuildings';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useAuth } from '@/contexts/AuthContext';
+import BuildingDetailModal from '@/components/BuildingDetailModal';
 import type { Building } from '@/types';
 
 const categories = [
@@ -27,6 +28,8 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState('popular');
+  const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth()
   const { buildings, loading } = useBuildings(
@@ -35,6 +38,16 @@ export default function Home() {
   );
   const { buildings: featuredBuildings, loading: featuredLoading } = useFeaturedBuildings();
   const { isFavorited, toggleFavorite } = useFavorites();
+
+  const handleOpenDetail = (building: Building) => {
+    setSelectedBuilding(building);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseDetail = () => {
+    setIsModalOpen(false);
+    setSelectedBuilding(null);
+  };
 
   const handleToggleFavorite = async (buildingId: number) => {
     if (!user) {
@@ -141,7 +154,8 @@ export default function Home() {
               {featuredBuildings.map((building: Building) => (
                 <div
                   key={building.id}
-                  className="flex-shrink-0 w-64 bg-white rounded-xl overflow-hidden shadow-sm"
+                  className="flex-shrink-0 w-64 bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer"
+                  onClick={() => handleOpenDetail(building)}
                 >
                   <div className="relative h-36">
                     <img
@@ -151,7 +165,10 @@ export default function Home() {
                     />
                     <div className="absolute top-2 right-2">
                       <button
-                        onClick={() => handleToggleFavorite(building.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleToggleFavorite(building.id);
+                        }}
                         className="w-8 h-8 bg-white/90 rounded-full flex items-center justify-center"
                       >
                         <Heart
@@ -200,7 +217,8 @@ export default function Home() {
             {buildings.map((building: Building) => (
               <div
                 key={building.id}
-                className="bg-white rounded-xl overflow-hidden shadow-sm flex"
+                className="bg-white rounded-xl overflow-hidden shadow-sm flex cursor-pointer"
+                onClick={() => handleOpenDetail(building)}
               >
                 <div className="relative w-28 h-28 flex-shrink-0">
                   <img
@@ -214,7 +232,10 @@ export default function Home() {
                     <div className="flex items-start justify-between">
                       <h3 className="font-bold text-[#1d3557] text-sm">{building.name}</h3>
                       <button
-                        onClick={() => handleToggleFavorite(building.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleToggleFavorite(building.id);
+                        }}
                       >
                         <Heart
                           className={`w-4 h-4 transition-colors ${
@@ -242,7 +263,10 @@ export default function Home() {
                     <Button
                       size="sm"
                       className="h-7 px-3 bg-[#e63946] hover:bg-[#c1121f] text-xs rounded-full"
-                      onClick={() => navigate('/checkin')}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate('/checkin');
+                      }}
                     >
                       打卡
                     </Button>
@@ -262,6 +286,15 @@ export default function Home() {
           </div>
         )}
       </section>
+
+      {/* 建筑详情弹窗 */}
+      <BuildingDetailModal
+        building={selectedBuilding}
+        isOpen={isModalOpen}
+        onClose={handleCloseDetail}
+        isFavorited={selectedBuilding ? isFavorited(selectedBuilding.id) : false}
+        onToggleFavorite={() => selectedBuilding && handleToggleFavorite(selectedBuilding.id)}
+      />
     </div>
   );
 }
