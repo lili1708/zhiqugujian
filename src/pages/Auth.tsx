@@ -32,7 +32,7 @@ export default function Auth() {
         if (error) {
           setError(error.message)
         } else {
-          setError('注册成功！')
+          setError('注册成功！请检查邮箱完成验证，或直接登录。')
           setIsLogin(true)
         }
       }

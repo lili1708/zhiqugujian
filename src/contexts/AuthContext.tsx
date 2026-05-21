@@ -51,11 +51,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         data: {
           name: username || email.split('@')[0],
         },
+        emailRedirectTo: window.location.origin,
       },
     })
     
     if (!error && data.user) {
-      await supabase.auth.signInWithPassword({ email, password })
+      // 检查是否需要邮箱确认
+      if (data.session) {
+        // 如果直接返回了 session，说明不需要邮箱确认（本地开发时）
+        setSession(data.session)
+        setUser(data.user)
+      }
     }
     return { error }
   }
